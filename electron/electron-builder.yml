@@ -1,0 +1,33 @@
+appId: com.triloautomation.ezi
+productName: EZI
+copyright: "© 2025 Trilo Automation"
+
+# Source files to include in the package
+files:
+  - dist/**/*
+  - electron/**/*
+  - public/**/*
+  - package.json
+
+directories:
+  output: dist-electron
+
+# Windows installer (.exe)
+win:
+  target:
+    - target: nsis       # Full installer with uninstall support
+      arch: [x64]
+  # icon: public/cat-logo.png   # Uncomment if you convert cat-logo.png to .ico
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  installerHeaderIcon: ""
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: EZI
+
+# Portable single .exe (no install needed) — optional extra target
+# Uncomment below to also produce a portable exe:
+# portable:
+#   artifactName: EZI-portable.exe

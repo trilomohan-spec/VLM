@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">EZI</string>
+    <string name="title_activity_main">EZI</string>
+    <string name="package_name">com.triloautomation.serialscanner</string>
+    <string name="custom_url_scheme">com.triloautomation.serialscanner</string>
+</resources>
