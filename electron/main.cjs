@@ -3,8 +3,9 @@
  * Trilo Automation
  */
 
-const { app, BrowserWindow, shell, session } = require("electron");
+const { app, BrowserWindow, shell, session, ipcMain } = require("electron");
 const path = require("path");
+const license = require("./license.cjs");
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -35,6 +36,16 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+  // ── License IPC handlers ─────────────────────────────────────────────────
+  const userData = app.getPath("userData");
+
+  ipcMain.handle("license:getMachineId", () => license.getMachineId());
+  ipcMain.handle("license:isLicensed",   () => license.isLicensed(userData));
+  ipcMain.handle("license:activate", (_event, key) => {
+    const result = license.activateLicense(userData, key);
+    return result;
+  });
+
   // Grant camera + microphone permissions without prompting
   session.defaultSession.setPermissionRequestHandler(
     (_webContents, permission, callback) => {
