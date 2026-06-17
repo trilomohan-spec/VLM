@@ -55,7 +55,8 @@ export function LicenseGate({ children }: LicenseGateProps) {
     const result = await window.ezilicense!.activate(key.trim());
     setLoading(false);
     if (result.success) {
-      setStatus("licensed");
+      // Reload so the app starts fresh with the license already validated
+      window.location.reload();
     } else {
       setError(result.error ?? "Activation failed.");
     }
