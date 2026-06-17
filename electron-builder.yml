@@ -17,12 +17,12 @@ win:
   target:
     - target: nsis       # Full installer with uninstall support
       arch: [x64]
-  # icon: public/cat-logo.png   # Uncomment if you convert cat-logo.png to .ico
+  icon: public/cat-logo.ico
 
 nsis:
   oneClick: false
   allowToChangeInstallationDirectory: true
-  installerHeaderIcon: ""
+  installerHeaderIcon: "public/cat-logo.ico"
   createDesktopShortcut: true
   createStartMenuShortcut: true
   shortcutName: EZI
