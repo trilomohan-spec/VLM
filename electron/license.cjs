@@ -17,21 +17,28 @@ const path   = require('path');
 const _S = ['T','R','L','0','E','Z','I','2','0','2','5','X','K','9','M'].join('');
 
 // ── Machine ID ──────────────────────────────────────────────────────────────
+// Uses only built-in Node.js — no external npm packages needed.
 let _cachedMachineId = null;
 
 function getMachineId() {
   if (_cachedMachineId) return _cachedMachineId;
+
+  let raw = '';
   try {
-    const { machineIdSync } = require('node-machine-id');
-    _cachedMachineId = machineIdSync(true); // raw hardware UUID
+    // Windows: pull CPU ProcessorId + disk serial via WMIC (always available on Windows 7+)
+    const { execSync } = require('child_process');
+    const cpuOut  = execSync('wmic cpu get ProcessorId /value', { encoding: 'utf8', timeout: 4000 });
+    const diskOut = execSync('wmic diskdrive get SerialNumber /value', { encoding: 'utf8', timeout: 4000 });
+    const cpuId   = (cpuOut.match(/ProcessorId=(\S+)/i)  || [])[1] || '';
+    const diskId  = (diskOut.match(/SerialNumber=(\S+)/i) || [])[1] || '';
+    raw = cpuId + diskId;
   } catch {
-    // Fallback if node-machine-id unavailable (shouldn't happen in production)
+    // Non-Windows or WMIC unavailable — fall back to hostname
     const os = require('os');
-    _cachedMachineId = crypto
-      .createHash('sha256')
-      .update(os.hostname() + os.platform() + os.arch() + os.cpus()[0]?.model)
-      .digest('hex');
+    raw = os.hostname() + os.platform() + os.arch();
   }
+
+  _cachedMachineId = crypto.createHash('sha256').update(raw.toLowerCase()).digest('hex');
   return _cachedMachineId;
 }
 
