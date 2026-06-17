@@ -3,11 +3,14 @@
  * Trilo Automation
  */
 
-const { app, BrowserWindow, shell, session, ipcMain } = require("electron");
+const { app, BrowserWindow, shell, session, ipcMain, Menu } = require("electron");
 const path = require("path");
 
 let license = null;
 try { license = require("./license.cjs"); } catch (e) { console.warn("License module unavailable:", e.message); }
+
+// Remove the native menu bar (File, Edit, View, Window, Help)
+Menu.setApplicationMenu(null);
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -16,8 +19,7 @@ function createWindow() {
     minWidth: 420,
     minHeight: 680,
     title: "EZI — Serial Number Recognition System",
-    // Use the CAT logo as the window icon (ico format preferred on Windows)
-    // icon: path.join(__dirname, "../public/cat-logo.png"),
+    icon: path.join(__dirname, "../public/cat-logo.ico"),
     webPreferences: {
       preload: path.join(__dirname, "preload.cjs"),
       contextIsolation: true,
