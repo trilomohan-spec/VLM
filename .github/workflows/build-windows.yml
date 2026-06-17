@@ -1,38 +1,34 @@
-name: Build Windows EXE
+appId: com.triloautomation.ezi
+productName: EZI
+copyright: "© 2025 Trilo Automation"
 
-on:
-  push:
-    branches: [main]
-  workflow_dispatch:   # allows manual trigger from GitHub UI
+# Source files to include in the package
+files:
+  - dist/**/*
+  - electron/**/*
+  - public/**/*
+  - package.json
+  - node_modules/node-machine-id/**/*
 
-jobs:
-  build-windows:
-    runs-on: windows-latest
+directories:
+  output: dist-electron
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+# Windows installer (.exe)
+win:
+  target:
+    - target: nsis       # Full installer with uninstall support
+      arch: [x64]
+  # icon: public/cat-logo.png   # Uncomment if you convert cat-logo.png to .ico
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  installerHeaderIcon: ""
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: EZI
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build Vite app
-        run: npm run build
-
-      - name: Package Windows EXE
-        run: npx electron-builder --win
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload EXE artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: EZI-Windows-Installer
-          path: dist-electron/*.exe
-          retention-days: 30
+# Portable single .exe (no install needed) — optional extra target
+# Uncomment below to also produce a portable exe:
+# portable:
+#   artifactName: EZI-portable.exe
