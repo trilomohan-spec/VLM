@@ -34,12 +34,17 @@ export function LicenseGate({ children }: LicenseGateProps) {
       return;
     }
     (async () => {
-      const [licensed, mid] = await Promise.all([
-        window.ezilicense!.isLicensed(),
-        window.ezilicense!.getMachineId(),
-      ]);
-      setMachineId(mid);
-      setStatus(licensed ? "licensed" : "unlicensed");
+      try {
+        const [licensed, mid] = await Promise.all([
+          window.ezilicense!.isLicensed(),
+          window.ezilicense!.getMachineId(),
+        ]);
+        setMachineId(mid ?? "");
+        setStatus(licensed ? "licensed" : "unlicensed");
+      } catch {
+        // If IPC fails for any reason, let the app through
+        setStatus("licensed");
+      }
     })();
   }, []);
 
