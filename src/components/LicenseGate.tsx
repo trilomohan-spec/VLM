@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, ReactNode, ChangeEvent } from "react";
 
 declare global {
   interface Window {
@@ -11,7 +11,7 @@ declare global {
 }
 
 interface LicenseGateProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 /**
@@ -64,7 +64,7 @@ export function LicenseGate({ children }: LicenseGateProps) {
   }
 
   // Format key input as XXXX-XXXX-XXXX-XXXX
-  function handleKeyInput(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleKeyInput(e: ChangeEvent<HTMLInputElement>) {
     const raw = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "");
     const formatted = raw.match(/.{1,4}/g)?.join("-") ?? raw;
     setKey(formatted.slice(0, 19)); // max 16 chars + 3 dashes
