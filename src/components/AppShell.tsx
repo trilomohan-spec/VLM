@@ -18,7 +18,7 @@ export function AppShell() {
         <div className="px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img
-              src="/cat-logo.png"
+              src="./cat-logo.png"
               alt="CAT"
               className="h-10 w-auto object-contain rounded-md"
             />
@@ -61,7 +61,7 @@ export function AppShell() {
           Powered by
         </span>
         <img
-          src="/trilo-logo.png"
+          src="./trilo-logo.png"
           alt="Trilo Automation"
           className="w-auto object-contain"
           style={{ height: "52px" }}
