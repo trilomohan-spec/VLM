@@ -1,34 +1,26 @@
-appId: com.triloautomation.ezi
-productName: EZI
-copyright: "© 2025 Trilo Automation"
+name: Build Windows EXE
 
-# Source files to include in the package
-files:
-  - dist/**/*
-  - electron/**/*
-  - public/**/*
-  - package.json
-  - node_modules/node-machine-id/**/*
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
 
-directories:
-  output: dist-electron
-
-# Windows installer (.exe)
-win:
-  target:
-    - target: nsis       # Full installer with uninstall support
-      arch: [x64]
-  # icon: public/cat-logo.png   # Uncomment if you convert cat-logo.png to .ico
-
-nsis:
-  oneClick: false
-  allowToChangeInstallationDirectory: true
-  installerHeaderIcon: ""
-  createDesktopShortcut: true
-  createStartMenuShortcut: true
-  shortcutName: EZI
-
-# Portable single .exe (no install needed) — optional extra target
-# Uncomment below to also produce a portable exe:
-# portable:
-#   artifactName: EZI-portable.exe
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm install
+      - run: npm run build
+      - run: npx electron-builder --win
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: EZI-Windows-Installer
+          path: dist-electron/*.exe
+          retention-days: 30
